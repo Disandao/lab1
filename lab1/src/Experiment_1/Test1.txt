@@ -1,3 +1,5 @@
+
 BB
+
 This test is for merge!
 
