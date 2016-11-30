@@ -5,10 +5,6 @@ import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-/*this is git test!!!!*/
-<<<<<<< HEAD
-/*this test is for merge!!!!*/
-
 class PointLink 
 {
 	int pre;
@@ -19,17 +15,15 @@ class PointLink
         this.str = _str;
     }
 }
-
-public class result 
-{
-	///处理表达式，验证其输入是否合法，并且将连乘改为次幂，省略的*加上
-	public static String dispose(String expression)
+class Expression {
+    private String Expression;
+    public static String dispose(String expression)
 	{
 		Pattern p =  Pattern.compile("^((([0-9]*[a-zA-Z]+\\^?[0-9]?)|[0-9]+)(\\s)*[\\+*-]?(\\s)*)+([0-9]*[a-zA-Z]+\\^?[0-9]?|[0-9]+)");
 		Matcher m = p.matcher(expression);
 		if(m.matches())
 		{
-			Pattern p1 = Pattern.compile("(([a-z])\\*)\\1*\\2");
+			Pattern p1 = Pattern.compile("(([a-z]*)\\*)\\1*\\2");
 			Matcher m1 = p1.matcher(expression);
 			int count  = 0;
 			while(m1.find()) {
@@ -46,8 +40,8 @@ public class result
 		}
 		return expression;
 	}
-	///合并同类项
-	public static String Merge(String expression)
+    
+    public static String Merge(String expression)
 	{
 		PointLink[] polylist = new PointLink[10];
 		for(int j=0;j<10;j++)
@@ -198,8 +192,8 @@ public class result
 		}
 		return result;
 	} 
-	//求导函数
-	public static String duff(String str,String command)//qiu dao 
+    
+    public static String duff(String str,String command)//qiu dao 
 	{
 		int []biao=new int [1000];
 		int w=0;
@@ -394,8 +388,7 @@ public class result
         System.out.println(result);
 		return result;
 	}
-	//求值函数(替换变量)
-	public static String number(String str,String com)//��ֵ �滻 ���������� 
+    public static String Simplify(String str,String com)//  ֵ  滻            
 	{
 		String str_old=str;	
 		String[] com_Str = com.split(" ");
@@ -418,20 +411,10 @@ public class result
 				}
 			}
 		}
-		str=result_(str);
-		if(str.equals("0"))
-			System.out.println(str);
-		else
-		{
-			str = Merge(str);
-			System.out.println(str);
-		}
-		return str;
+//		str=result_(str);
+
 		
-	}
-	//求值函数(具体求值)
-	public static String result_ (String str)//���㲢����
-	{
+		
 		String[] StrArray = str.split("\\+|\\-");
 		String[][] string= new String[StrArray.length][10];
 		
@@ -535,7 +518,6 @@ public class result
         			else
         			{
         				if(string[i][j]=="")
-        					//break;
         					continue;
         				else if(print[i]==null)
         					print[i]=string[i][j];
@@ -595,31 +577,37 @@ public class result
         {
         	result+="0";
         }
+		
+        
+		if(str.equals("0"))
+			System.out.println(result);
+		else
+		{
+			result = Merge(result);
+			System.out.println(result);
+		}
+		
+		
 		return result;
+		
 	}
-	public static void main( String args[] )
-	{
-		Scanner line = new Scanner(System.in);
-		System.out.println("请输入表达式："); 
-		String expression = line.nextLine();
-		expression = dispose(expression);
-		if(expression.equals("error"))
-			return;
-		expression = Merge(expression);
-		//System.out.println("化简后的表达式："+expression); 
-		System.out.println("请输入命令："); 
+    
+}
+class Command {
+    private String Command;
+    public static void Verify(String expression) {
+    	System.out.println("请输入命令："); 
 		Scanner line2  = new Scanner(System.in);
 		String command = line2.nextLine();
-		String simplify = "!simplify";
+    	String simplify = "!simplify";
 		String derivation = "!d/d";
-		
-		while(!command.equals("exit"))
+    	while(!command.equals("exit"))
 		{
 			
 			if(command.length()>8&&command.substring(0, 9).equals(simplify))
 			{
 				long startTime=System.currentTimeMillis();
-				number(expression,command);
+				Expression.Simplify(expression,command);
 				long endTime=System.currentTimeMillis();
 				System.out.println("程序开始时间： "+startTime+"ms");
 				System.out.println("程序结束时间： "+endTime+"ms");
@@ -630,7 +618,7 @@ public class result
 			else if(command.length()>3&&command.substring(0, 4).equals(derivation))
 			{
 				long startTime=System.currentTimeMillis();
-				duff(expression,command);
+				Expression.duff(expression,command);
 				long endTime=System.currentTimeMillis();
 				System.out.println("程序开始时间： "+startTime+"ms");
 				System.out.println("程序结束时间： "+endTime+"ms");
@@ -642,6 +630,25 @@ public class result
 			System.out.println("请输入命令(exit退出)："); 
 			command = line2.nextLine();
 		}
+    }
+}
+public class result 
+{
+	
+	public static void main( String args[] )
+	{
+		Scanner line = new Scanner(System.in);
+		System.out.println("请输入表达式："); 
+		String expression = line.nextLine();
+		
+		expression = Expression.dispose(expression);
+		if(expression.equals("error"))
+			return;
+		expression = Expression.Merge(expression);
+		System.out.println("化简后的表达式："+expression);
+		
+		Command.Verify(expression);
+		
 		
 	}
 }
